@@ -16,8 +16,7 @@
  */
 package org.jboss.as.quickstarts.kitchensink.model;
 
-import java.io.Serializable;
-
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,7 +36,7 @@ import jakarta.validation.constraints.NotEmpty;
 @Entity
 @XmlRootElement
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class Member implements Serializable {
+public class Member extends PanacheEntityBase {
 
     @Id
     @GeneratedValue
