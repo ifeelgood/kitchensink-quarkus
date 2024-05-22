@@ -16,6 +16,8 @@
  */
 package org.jboss.as.quickstarts.kitchensink.data;
 
+import io.quarkus.vertx.ConsumeEvent;
+import io.smallrye.common.annotation.Blocking;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.event.Observes;
@@ -43,7 +45,9 @@ public class MemberListProducer {
         return members;
     }
 
-    public void onMemberListChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Member member) {
+    @ConsumeEvent(value = "new-member")
+    @Blocking
+    public void onMemberListChanged(Member member) {
         retrieveAllMembersOrderedByName();
     }
 
