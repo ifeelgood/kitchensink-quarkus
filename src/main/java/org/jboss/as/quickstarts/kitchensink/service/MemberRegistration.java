@@ -16,17 +16,16 @@
  */
 package org.jboss.as.quickstarts.kitchensink.service;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
 import org.jboss.as.quickstarts.kitchensink.model.Member;
 
-import jakarta.ejb.Stateless;
 import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
 import org.jboss.logging.Logger;
 
-// The @Stateless annotation eliminates the need for manual transaction demarcation
-@Stateless
+@ApplicationScoped
 public class MemberRegistration {
 
     @Inject
@@ -38,6 +37,7 @@ public class MemberRegistration {
     @Inject
     private Event<Member> memberEventSrc;
 
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void register(Member member) throws Exception {
         log.info("Registering " + member.getName());
         memberRepository.persist(member);
