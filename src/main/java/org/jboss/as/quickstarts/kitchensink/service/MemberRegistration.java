@@ -17,8 +17,8 @@
 package org.jboss.as.quickstarts.kitchensink.service;
 
 
-import io.vertx.mutiny.core.eventbus.EventBus;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
 import jakarta.transaction.Transactional;
 import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
 import org.jboss.as.quickstarts.kitchensink.model.Member;
@@ -36,12 +36,12 @@ public class MemberRegistration {
     MemberRepository memberRepository;
 
     @Inject
-    EventBus bus;
+    private Event<Member> memberEventSrc;
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void register(Member member) throws Exception {
+    public void register(Member member) {
         log.info("Registering " + member.getName());
-        memberRepository.persist(member);
-        bus.request("new-member", member);
+        member.persist();
+        memberEventSrc.fire(member);
     }
 }

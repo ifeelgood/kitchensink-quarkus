@@ -17,7 +17,6 @@
 package org.jboss.as.quickstarts.kitchensink.controller;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.faces.application.FacesMessage;
@@ -33,17 +32,18 @@ import org.jboss.as.quickstarts.kitchensink.service.MemberRegistration;
 public class MemberController {
 
     @Inject
-    @RequestScoped
     private FacesContext facesContext;
 
     @Inject
-    @ApplicationScoped
     private MemberRegistration memberRegistration;
 
-    @Produces
+    private Member newMember;
+
+    @Produces @RequestScoped
     @Named
-    @RequestScoped
-    Member newMember;
+    public Member getNewMember() {
+        return newMember;
+    }
 
     @PostConstruct
     public void initNewMember() {
@@ -61,6 +61,7 @@ public class MemberController {
             FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration unsuccessful");
             facesContext.addMessage(null, m);
         }
+        facesContext.getExternalContext().redirect("");
     }
 
     private String getRootErrorMessage(Exception e) {

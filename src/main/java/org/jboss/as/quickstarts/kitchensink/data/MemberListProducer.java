@@ -16,8 +16,6 @@
  */
 package org.jboss.as.quickstarts.kitchensink.data;
 
-import io.quarkus.vertx.ConsumeEvent;
-import io.smallrye.common.annotation.Blocking;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.event.Observes;
@@ -39,16 +37,13 @@ public class MemberListProducer {
 
     // @Named provides access the return value via the EL variable name "members" in the UI (e.g.
     // Facelets or JSP view)
-    @Produces
-    @RequestScoped
+    @Produces @RequestScoped
     @Named
     public List<Member> getMembers() {
         return members;
     }
 
-    @ConsumeEvent(value = "new-member")
-    @Blocking
-    public void onMemberListChanged(Member member) {
+    public void onMemberListChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Member member) {
         retrieveAllMembersOrderedByName();
     }
 
