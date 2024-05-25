@@ -29,7 +29,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import org.jboss.as.quickstarts.kitchensink.model.Member;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -61,14 +60,10 @@ public class RemoteMemberRegistrationIT {
 
     @Test
     public void testRegister() throws Exception {
-        Member newMember = new Member();
-        newMember.setName("Jane Doe");
-        newMember.setEmail("jane@mailinator.com");
-        newMember.setPhoneNumber("2125551234");
         JsonObject json = Json.createObjectBuilder()
-                .add("name", "Jane Doe")
-                .add("email", "jane@mailinator.com")
-                .add("phoneNumber", "2125551234").build();
+                .add("name", "Jane Doe Jr")
+                .add("email", "jane_Jr@mailinator.com")
+                .add("phoneNumber", "2125551235").build();
         HttpRequest request = HttpRequest.newBuilder(getHTTPEndpoint())
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
