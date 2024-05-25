@@ -17,6 +17,7 @@
 package org.jboss.as.quickstarts.kitchensink.test;
 
 import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 
@@ -35,12 +36,13 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 public class RemoteMemberRegistrationIT {
 
-    private static final Logger log = Logger.getLogger(RemoteMemberRegistrationIT.class.getName());
+    @Inject
+    Logger log;
 
     protected URI getHTTPEndpoint() {
         String host = getServerHost();
         if (host == null) {
-            host = "http://localhost:8080/kitchensink";
+            host = "http://localhost:8081";
         }
         try {
             return new URI(host + "/rest/members");
