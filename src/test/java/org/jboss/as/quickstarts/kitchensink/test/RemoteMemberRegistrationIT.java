@@ -16,10 +16,11 @@
  */
 package org.jboss.as.quickstarts.kitchensink.test;
 
+import io.quarkus.test.junit.QuarkusTest;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 
-import java.util.logging.Logger;
+import org.jboss.logging.Logger;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,9 +29,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import org.jboss.as.quickstarts.kitchensink.model.Member;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
+@QuarkusTest
 public class RemoteMemberRegistrationIT {
 
     private static final Logger log = Logger.getLogger(RemoteMemberRegistrationIT.class.getName());
@@ -70,8 +72,8 @@ public class RemoteMemberRegistrationIT {
                 .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
                 .build();
         HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        Assert.assertEquals(200, response.statusCode());
-        Assert.assertEquals("", response.body().toString() );
+        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals("", response.body().toString() );
     }
 
 }
