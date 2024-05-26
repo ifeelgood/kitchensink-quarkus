@@ -21,6 +21,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.bson.types.ObjectId;
 import org.jboss.logging.Logger;
 
 import jakarta.enterprise.context.RequestScoped;
@@ -71,10 +73,10 @@ public class MemberResourceRESTService {
     }
 
     @GET
-    @Path("/{id:[0-9][0-9]*}")
+    @Path("/{id:[0-9a-fA-F]{24}}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Member lookupMemberById(@PathParam("id") long id) {
-        Member member = repository.findById(id);
+    public Member lookupMemberById(@PathParam("id") String hexString) {
+        Member member = repository.findById(new ObjectId(hexString));
         if (member == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }

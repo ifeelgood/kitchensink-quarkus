@@ -41,7 +41,7 @@ public class MemberRegistration {
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void register(Member member) {
         log.info("Registering " + member.getName());
-        member.persist();
+        memberRepository.persist(member);
         memberEventSrc.fire(member);
     }
 }

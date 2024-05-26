@@ -16,7 +16,7 @@
  */
 package org.jboss.as.quickstarts.kitchensink.data;
 
-import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
+import io.quarkus.mongodb.panache.PanacheMongoRepository;
 import io.quarkus.panache.common.Parameters;
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -25,7 +25,7 @@ import java.util.List;
 import org.jboss.as.quickstarts.kitchensink.model.Member;
 
 @ApplicationScoped
-public class MemberRepository implements PanacheRepositoryBase<Member, Long> {
+public class MemberRepository implements PanacheMongoRepository<Member> {
 
     public Member findByEmail(String email) {
         return find("email = :email", Parameters.with("email", email)).firstResult();

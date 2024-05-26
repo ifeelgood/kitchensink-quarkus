@@ -16,13 +16,9 @@
  */
 package org.jboss.as.quickstarts.kitchensink.model;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.mongodb.panache.PanacheMongoEntity;
+import io.quarkus.mongodb.panache.common.MongoEntity;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -31,16 +27,11 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import org.bson.types.ObjectId;
 
-@Entity
 @XmlRootElement
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class Member extends PanacheEntityBase {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
+@MongoEntity(collection="member")
+public class Member extends PanacheMongoEntity {
     @NotNull
     @Size(min = 1, max = 25)
     @Pattern(regexp = "[^0-9]*", message = "Must not contain numbers")
@@ -57,11 +48,11 @@ public class Member extends PanacheEntityBase {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    public Long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

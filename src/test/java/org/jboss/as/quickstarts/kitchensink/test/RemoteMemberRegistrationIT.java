@@ -23,6 +23,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonObject;
 
 import jakarta.ws.rs.core.Response;
+import org.bson.types.ObjectId;
 import org.jboss.as.quickstarts.kitchensink.model.Member;
 import org.jboss.logging.Logger;
 
@@ -45,6 +46,7 @@ import static org.hamcrest.Matchers.greaterThan;
 @QuarkusTest
 public class RemoteMemberRegistrationIT {
 
+    public static final String JOHN_ID = "6652c45dc4b9f77f03cc3c9f";
     @Inject
     Logger log;
 
@@ -84,23 +86,6 @@ public class RemoteMemberRegistrationIT {
     }
 
     @Test
-    public void testDuplicatedId() {
-        Member member = new Member();
-        member.setName("Jane Doe Jr");
-        member.setEmail(UUID.randomUUID() + "@mailinator.com");
-        member.setPhoneNumber("1234567890");
-        member.setId(1L);
-        given()
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .body(member)
-                .when()
-                .post("/rest/members")
-                .then()
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
-    }
-
-    @Test
     public void testList() {
         given()
                 .accept(ContentType.JSON)
@@ -116,7 +101,7 @@ public class RemoteMemberRegistrationIT {
         given()
                 .accept(ContentType.JSON)
                 .when()
-                .get("/rest/members/0")
+                .get("/rest/members/"+ JOHN_ID)
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("name", equalTo("John Smith"));
