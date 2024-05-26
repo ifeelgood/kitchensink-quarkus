@@ -1,6 +1,5 @@
 package org.jboss.as.quickstarts.kitchensink.test;
 
-import io.quarkus.test.junit.QuarkusMock;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;

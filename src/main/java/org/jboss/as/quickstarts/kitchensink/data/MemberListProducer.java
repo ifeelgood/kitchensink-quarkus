@@ -17,7 +17,7 @@
 package org.jboss.as.quickstarts.kitchensink.data;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.event.Reception;
 import jakarta.enterprise.inject.Produces;
@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.jboss.as.quickstarts.kitchensink.model.Member;
 
-@ApplicationScoped
+@RequestScoped
 public class MemberListProducer {
 
     @Inject
@@ -37,7 +37,7 @@ public class MemberListProducer {
 
     // @Named provides access the return value via the EL variable name "members" in the UI (e.g.
     // Facelets or JSP view)
-    @Produces @ApplicationScoped
+    @Produces @RequestScoped
     @Named
     public List<Member> getMembers() {
         return members;
