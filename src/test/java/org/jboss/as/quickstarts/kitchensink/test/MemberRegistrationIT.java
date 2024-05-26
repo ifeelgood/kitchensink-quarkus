@@ -16,12 +16,10 @@
  */
 package org.jboss.as.quickstarts.kitchensink.test;
 
-import org.jboss.as.quickstarts.kitchensink.data.MemberListProducer;
 import org.jboss.logging.Logger;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-
 
 import org.jboss.as.quickstarts.kitchensink.model.Member;
 import org.jboss.as.quickstarts.kitchensink.service.MemberRegistration;

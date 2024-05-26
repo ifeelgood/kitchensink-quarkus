@@ -28,6 +28,7 @@ import java.util.List;
 import org.jboss.as.quickstarts.kitchensink.model.Member;
 
 @RequestScoped
+@Named
 public class MemberListProducer {
 
     @Inject
@@ -35,10 +36,6 @@ public class MemberListProducer {
 
     private List<Member> members;
 
-    // @Named provides access the return value via the EL variable name "members" in the UI (e.g.
-    // Facelets or JSP view)
-    @Produces @RequestScoped
-    @Named
     public List<Member> getMembers() {
         return members;
     }

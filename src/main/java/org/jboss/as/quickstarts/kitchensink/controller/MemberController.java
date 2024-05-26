@@ -39,8 +39,6 @@ public class MemberController {
 
     private Member newMember;
 
-    @Produces @RequestScoped
-    @Named
     public Member getNewMember() {
         return newMember;
     }
@@ -61,7 +59,6 @@ public class MemberController {
             FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration unsuccessful");
             facesContext.addMessage(null, m);
         }
-        facesContext.getExternalContext().redirect("");
     }
 
     private String getRootErrorMessage(Exception e) {

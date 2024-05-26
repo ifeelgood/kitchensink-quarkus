@@ -16,15 +16,18 @@
  */
 package org.jboss.as.quickstarts.kitchensink.service;
 
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Event;
 import jakarta.transaction.Transactional;
-import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.jboss.as.quickstarts.kitchensink.model.Member;
 
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class MemberRegistration {
@@ -33,15 +36,27 @@ public class MemberRegistration {
     private Logger log;
 
     @Inject
-    MemberRepository memberRepository;
+    Validator validator;
 
     @Inject
     private Event<Member> memberEventSrc;
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void register(Member member) {
+    public void register(Member member) throws Exception {
         log.info("Registering " + member.getName());
-        memberRepository.persist(member);
+        Set<ConstraintViolation<Member>> violations = validator.validate(member);
+        if(!violations.isEmpty()) {
+            String validationError;
+            if(violations.size() == 1) {
+                validationError = violations.iterator().next().getMessage();
+            } else {
+                validationError = violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.joining("; "));
+            }
+            throw new Exception(validationError);
+        }
+        member.persist();
         memberEventSrc.fire(member);
     }
 }

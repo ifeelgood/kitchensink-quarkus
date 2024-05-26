@@ -10,6 +10,11 @@ You can run your application in dev mode that enables live coding using:
 ```shell script
 ./mvnw compile quarkus:dev
 ```
+In dev mode this will also spin up MongoDB instance and therefore you need docker demon running as a pre-requisite.
+If you do not want to install Docker or you wish to use your mongoDB instance you should pass it using the alternative command:
+```shell script
+./mvnw compile quarkus:dev "-Dquarkus.mongodb.connection-string=mongodb://localhost:27017"
+```
 
 Once build is completed and application is started you can access it via browser at http://localhost:8080
 
@@ -25,8 +30,10 @@ It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
 
 The application is now runnable using
 ```shell script
-java -jar target/quarkus-app/quarkus-run.jar
+java -jar target/quarkus-app/quarkus-run.jar "-Dquarkus.mongodb.connection-string=mongodb://localhost:27017"
 ```
+Replace mongoDB connection string with the connection string to your running mongoDB instance.
+
 Once started you can access it via browser at http://localhost:8080
 
 ## Related Guides

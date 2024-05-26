@@ -23,7 +23,6 @@ import jakarta.json.Json;
 import jakarta.json.JsonObject;
 
 import jakarta.ws.rs.core.Response;
-import org.bson.types.ObjectId;
 import org.jboss.as.quickstarts.kitchensink.model.Member;
 import org.jboss.logging.Logger;
 
@@ -39,7 +38,6 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.blankOrNullString;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 
