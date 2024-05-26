@@ -17,10 +17,13 @@
 package org.jboss.as.quickstarts.kitchensink.test;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 
+import jakarta.ws.rs.core.Response;
+import org.jboss.as.quickstarts.kitchensink.model.Member;
 import org.jboss.logging.Logger;
 
 import java.net.URI;
@@ -28,9 +31,16 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.blankOrNullString;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 
 @QuarkusTest
 public class RemoteMemberRegistrationIT {
@@ -71,6 +81,134 @@ public class RemoteMemberRegistrationIT {
         HttpResponse response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         Assertions.assertEquals(200, response.statusCode());
         Assertions.assertEquals("", response.body().toString() );
+    }
+
+    @Test
+    public void testDuplicatedId() {
+        Member member = new Member();
+        member.setName("Jane Doe Jr");
+        member.setEmail(UUID.randomUUID() + "@mailinator.com");
+        member.setPhoneNumber("1234567890");
+        member.setId(1L);
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(member)
+                .when()
+                .post("/rest/members")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    public void testList() {
+        given()
+                .accept(ContentType.JSON)
+                .when()
+                .get("/rest/members")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("size()", greaterThan(0));
+    }
+
+    @Test
+    public void testGet() {
+        given()
+                .accept(ContentType.JSON)
+                .when()
+                .get("/rest/members/0")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("name", equalTo("John Smith"));
+    }
+
+    @Test
+    public void testNotFoundMember() {
+        given()
+                .accept(ContentType.JSON)
+                .when()
+                .get("/rest/members/" + Long.MAX_VALUE)
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode())
+                .body(blankOrNullString());
+    }
+
+    @Test
+    public void testDuplicatedEmail() {
+        Member member = new Member();
+        member.setName("Jane Doe Jr");
+        member.setEmail("jane_Jr@mailinator.com");
+        member.setPhoneNumber("2125551235");
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(member)
+                .when()
+                .post("/rest/members")
+                .then()
+                .statusCode(Response.Status.CONFLICT.getStatusCode());
+    }
+
+    @Test
+    public void testMalformedRequest() {
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body("bad request")
+                .when().post("/rest/members")
+                .then()
+                    .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+    }
+
+    @Test
+    public void testInvalidPhoneNumber() {
+        Member member = new Member();
+        member.setName("Jane Doe Jr");
+        member.setEmail(UUID.randomUUID() + "@mailinator.com");
+        member.setPhoneNumber("1234");
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(member)
+                .when()
+                .post("/rest/members")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .body("phoneNumber", equalTo("size must be between 10 and 12"));
+    }
+
+    @Test
+    public void testNameWithNumbers() {
+        Member member = new Member();
+        member.setName("Jane Doe Jr4");
+        member.setEmail(UUID.randomUUID() + "@mailinator.com");
+        member.setPhoneNumber("1234567890");
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(member)
+                .when()
+                .post("/rest/members")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .body("name", equalTo("Must not contain numbers"));
+    }
+
+    @Test
+    public void testTooLongName() {
+        Member member = new Member();
+        member.setName("Vitaliy Vladislavovich Baschlykoff");
+        member.setEmail(UUID.randomUUID() + "@mailinator.com");
+        member.setPhoneNumber("1234567890");
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(member)
+                .when()
+                .post("/rest/members")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .body("name", equalTo("size must be between 1 and 25"));
     }
 
 }
