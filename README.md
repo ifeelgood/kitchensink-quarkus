@@ -44,6 +44,6 @@ Once started you can access it via browser at http://localhost:8080
 
 - MyFaces ([guide](https://myfaces.apache.org/#/coregettingstarted?id=quarkus)): MyFaces is a JSF / Faces implementation which also provides a Quarkus integration
 - MongoDB with Panache ([guide](https://quarkus.io/guides/mongodb-panache)): Simplify your persistence code for MongoDB via the active record or the repository pattern
-- Quarkus REST ([guide]([https://quarkus.io/guides/resteasy](https://quarkus.io/guides/rest))): REST endpoint framework implementing Jakarta REST and more
+- Quarkus RESTEasy ([guide](https://quarkus.io/guides/resteasy)): REST endpoint framework implementing Jakarta REST and more
 - Testing Quarkus application ([guide](https://quarkus.io/guides/getting-started-testing)): Testing framework based on JUnit 5 and Mockito
 - Measuring test coverage ([guide](https://quarkus.io/guides/tests-with-coverage)): JaCoCo is a free code coverage library for Java
