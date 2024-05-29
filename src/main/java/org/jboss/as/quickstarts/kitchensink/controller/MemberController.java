@@ -18,7 +18,6 @@ package org.jboss.as.quickstarts.kitchensink.controller;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.inject.Produces;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
@@ -64,10 +63,6 @@ public class MemberController {
     private String getRootErrorMessage(Exception e) {
         // Default to general error message that registration failed.
         String errorMessage = "Registration failed. See server log for more information";
-        if (e == null) {
-            // This shouldn't happen, but return the default messages
-            return errorMessage;
-        }
 
         // Start with the exception and recurse to find the root cause
         Throwable t = e;

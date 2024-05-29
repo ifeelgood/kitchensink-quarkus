@@ -16,6 +16,7 @@
  */
 package org.jboss.as.quickstarts.kitchensink.test;
 
+import io.quarkus.logging.Log;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
@@ -45,6 +46,8 @@ import static org.hamcrest.Matchers.greaterThan;
 public class RemoteMemberRegistrationIT {
 
     public static final String JOHN_ID = "6652c45dc4b9f77f03cc3c9f";
+    public static final String UNKNOWN_ID = "5652c45dc4b9f77f03cc3c9e";
+
     @Inject
     Logger log;
 
@@ -110,7 +113,7 @@ public class RemoteMemberRegistrationIT {
         given()
                 .accept(ContentType.JSON)
                 .when()
-                .get("/rest/members/" + Long.MAX_VALUE)
+                .get("/rest/members/" + UNKNOWN_ID)
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode())
                 .body(blankOrNullString());
@@ -182,6 +185,23 @@ public class RemoteMemberRegistrationIT {
         Member member = new Member();
         member.setName("Vitaliy Vladislavovich Baschlykoff");
         member.setEmail(UUID.randomUUID() + "@mailinator.com");
+        member.setPhoneNumber("1234567890");
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(member)
+                .when()
+                .post("/rest/members")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .body("name", equalTo("size must be between 1 and 25"));
+    }
+
+    @Test
+    public void testLongNameAndInvalidEmail() {
+        Member member = new Member();
+        member.setName("Vitaliy Vladislavovich Baschlykoff");
+        member.setEmail(UUID.randomUUID() + "mailinator.com");
         member.setPhoneNumber("1234567890");
         given()
                 .contentType(ContentType.JSON)

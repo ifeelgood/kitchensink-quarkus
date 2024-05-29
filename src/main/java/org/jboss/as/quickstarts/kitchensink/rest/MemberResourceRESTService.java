@@ -20,8 +20,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
+import io.quarkus.logging.Log;
 import org.bson.types.ObjectId;
 import org.jboss.logging.Logger;
 
@@ -45,12 +47,7 @@ import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
 import org.jboss.as.quickstarts.kitchensink.model.Member;
 import org.jboss.as.quickstarts.kitchensink.service.MemberRegistration;
 
-/**
- * JAX-RS Example
- * <p/>
- * This class produces a RESTful service to read/write the contents of the members table.
- */
-@Path("/members")
+@Path("/rest/members")
 @RequestScoped
 public class MemberResourceRESTService {
 
@@ -76,11 +73,12 @@ public class MemberResourceRESTService {
     @Path("/{id:[0-9a-fA-F]{24}}")
     @Produces(MediaType.APPLICATION_JSON)
     public Member lookupMemberById(@PathParam("id") String hexString) {
-        Member member = repository.findById(new ObjectId(hexString));
-        if (member == null) {
+        Log.info(hexString);
+        Optional<Member> member = repository.findByIdOptional(new ObjectId(hexString));
+        if (member.isEmpty()) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return member;
+        return member.get();
     }
 
     /**

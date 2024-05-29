@@ -41,7 +41,7 @@ public class MemberRegistration {
     @Inject
     private Event<Member> memberEventSrc;
 
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    @Transactional
     public void register(Member member) throws Exception {
         log.info("Registering " + member.getName());
         Set<ConstraintViolation<Member>> violations = validator.validate(member);

@@ -20,7 +20,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.event.Reception;
-import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.util.List;
